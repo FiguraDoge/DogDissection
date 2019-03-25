@@ -8,6 +8,8 @@ TagManager:
   - Transimitter
   - XAND
   - Input
+  - Output
+  - Gate
   layers:
   - Default
   - TransparentFX
