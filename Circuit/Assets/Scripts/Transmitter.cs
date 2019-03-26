@@ -12,40 +12,23 @@ using UnityEngine;
 
 public class Transmitter : MonoBehaviour
 {
-    public GameObject leftPort;
-    public GameObject rightPort;
+    public GameObject inputPort;
+    public GameObject outputPort;
 
-    private Basic leftInputScpt;
-    private Basic rightInputScpt;
+    private Basic inputScpt;
+    private Basic outputScpt;
 
     void Start()
     {
-        leftInputScpt = leftPort.GetComponent<Basic>();
-        rightInputScpt = rightPort.GetComponent<Basic>();
-
-        leftInputScpt.setInput(new List<Basic>());
-        leftInputScpt.setOutput(false);
-        leftInputScpt.setCurrent(false);
-
-        rightInputScpt.setInput(new List<Basic>());
-        rightInputScpt.setOutput(false);
-        rightInputScpt.setOutput(false);
+        inputScpt = inputPort.GetComponent<Basic>();
+        outputScpt = outputPort.GetComponent<Basic>();
     }
 
     void Update()
     {
-        // leftPort and rightPort have to share the same value
-        // If one of them is true, then the other should be true as well
-        if (leftInputScpt.getOutput() || rightInputScpt.getOutput())
-        {
-            leftInputScpt.setOutput(true);
-            rightInputScpt.setOutput(true);
-        }
-
-        if (leftInputScpt.getCurrent() || rightInputScpt.getCurrent())
-        {
-            leftInputScpt.setCurrent(true);
-            rightInputScpt.setCurrent(true);
-        }
+        outputScpt.setOutput(inputScpt.getOutput());
+        outputScpt.setCurrent(inputScpt.getCurrent());
     }
+
+
 }

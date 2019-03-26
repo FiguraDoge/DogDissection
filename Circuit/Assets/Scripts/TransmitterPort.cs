@@ -29,13 +29,8 @@ public class TransmitterPort : MonoBehaviour
     void Update()
     {
         scpt.setInput(portDetection());
-        // Different than inputPort, I only set output to true when it is true
-        // Because false can be turned to ture, depending on the other end 
-        // So does current
-        if (portOutput(scpt.getInput()))
-            scpt.setOutput(true);
-        if (portCurrent(scpt.getInput()))
-            scpt.setCurrent(true);
+        scpt.setOutput(portOutput(scpt.getInput()));
+        scpt.setCurrent(portCurrent(scpt.getInput()));
     }
 
     private List<Basic> portDetection()
@@ -58,7 +53,6 @@ public class TransmitterPort : MonoBehaviour
                 }
             }
         }
-
         return scpt != null ?  new List<Basic> { scpt } :  new List<Basic>();
     }
 

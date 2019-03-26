@@ -16,7 +16,7 @@ public class InputPort : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        radius = 0.5f;
+        radius = 0.05f;
         scpt = this.gameObject.GetComponent<Basic>();
         scpt.setInput(new List<Basic>());
         scpt.setOutput(false);
