@@ -195,7 +195,7 @@ GameObject:
   - component: {fileID: 494194450731913721}
   - component: {fileID: 970303286243994004}
   m_Layer: 0
-  m_Name: Transimitter
+  m_Name: Transimitter 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -231,8 +231,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c58dea77ed9c55d4d832ce8498f80c8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputPort: {fileID: 0}
-  outputPort: {fileID: 0}
+  inputPort: {fileID: 8624082593718351352}
+  outputPort: {fileID: 8147082943597785037}
 --- !u!1 &8147082943597785037
 GameObject:
   m_ObjectHideFlags: 0

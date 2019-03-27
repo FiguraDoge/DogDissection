@@ -19,6 +19,9 @@ public class Controller : MonoBehaviour
     private float deletCD;
     private float rotateCD;
 
+
+    private GameObject movObj;
+
     private bool CheckGrab()
     {
         return grabAction.GetState(handType);
@@ -31,6 +34,7 @@ public class Controller : MonoBehaviour
 
     void Start()
     {
+        movObj = null;
         checkCD = 0f;
         selectCD = 0f;
         buildCD = 0f;
@@ -64,32 +68,43 @@ public class Controller : MonoBehaviour
 
             // If it hits the ground, which means player is going to place selected obj down
             // Interact button is still the same
-            if (hit.transform.tag == "Ground")
+            else if (hit.transform.tag == "Ground")
             {
-                if (select != null && CheckGrab() && checkCD <= 0)
+                if (select != null && CheckGrab() && movObj == null && checkCD <= 0)
                 {
                     if (buildCD <= 0)
                     {
-                        GameObject obj = Instantiate(Resources.Load(select, typeof(GameObject)), hit.point, Quaternion.identity) as GameObject;
-                        obj.tag = "Real";
+                        movObj = Instantiate(Resources.Load(select, typeof(GameObject)), hit.point, Quaternion.identity) as GameObject;
+                        movObj.tag = "Real";
                         buildCD = 3f;
                     }
                     checkCD = 0.2f;
                 }
+                else if (movObj != null)
+                {
+                    movObj.transform.position = hit.point;
+                }  
             }
-            
+            else if (movObj != null && hit.transform.tag == movObj.tag)
+            {
+                if (CheckGrab() && checkCD <= 0)
+                {
+                    checkCD = 0.2f;
+                    movObj = null;
+                }
+            }
+
             // If it hits an existing obj, which means player is either going to delete it or rotate it
             // Delete: trackpad     rotate: trigger
-            if (hit.transform.tag == "Real")
+            else if (hit.transform.tag == "Real")
             {
-                Debug.Log(CheckDelete());
                 if (CheckDelete() && deletCD <= 0)
                 {
                     Destroy(hit.transform.gameObject);
                     deletCD = 1f;
                 }
 
-                if (CheckGrab() && rotateCD <= 0 && checkCD <= 0)
+                if (CheckGrab() && rotateCD <= 0 && checkCD <= 0 && movObj == null)
                 {
                     hit.transform.Rotate(0, 90, 0);
                     rotateCD = 0.2f;

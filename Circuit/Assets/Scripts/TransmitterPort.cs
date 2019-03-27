@@ -18,7 +18,7 @@ public class TransmitterPort : MonoBehaviour
 
     void Start()
     {
-        radius = 0.05f;
+        radius = 0.1f;
         scpt = this.gameObject.GetComponent<Basic>();
         scpt.setInput(new List<Basic>());
         scpt.setOutput(false);
