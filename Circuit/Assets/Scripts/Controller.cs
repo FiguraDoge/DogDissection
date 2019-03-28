@@ -12,13 +12,7 @@ public class Controller : MonoBehaviour
     public SteamVR_Action_Boolean grabAction;
     public SteamVR_Action_Boolean deleteAction;
 
-    public string select;
-    private float checkCD;
-    private float selectCD;
-    private float buildCD;
-    private float deletCD;
-    private float rotateCD;
-
+    private PlayerManager playerManager;
 
     private GameObject movObj;
 
@@ -34,12 +28,7 @@ public class Controller : MonoBehaviour
 
     void Start()
     {
-        movObj = null;
-        checkCD = 0f;
-        selectCD = 0f;
-        buildCD = 0f;
-        deletCD = 0f;
-        rotateCD = 0f;
+        playerManager = PlayerManager.instance;
     }
 
     // Update is called once per frame
@@ -56,41 +45,45 @@ public class Controller : MonoBehaviour
         {
             // If it hits the samples on the wall and player grabed it 
             // select = obj
-            if (hit.transform.tag == "Sample" && CheckGrab() && checkCD <= 0)
+            if (hit.transform.tag == "Sample" && CheckGrab() && playerManager.checkCD <= 0)
             {
-                if (selectCD <= 0)
+                if (playerManager.selectCD <= 0)
                 {
-                    select = hit.transform.gameObject.name;
-                    selectCD = 1f;
+                    playerManager.select = hit.transform.gameObject.name;
+                    playerManager.selectCD = 1f;
                 }
-                checkCD = 0.2f;
+                playerManager.checkCD = 0.4f;
             }
 
             // If it hits the ground, which means player is going to place selected obj down
             // Interact button is still the same
             else if (hit.transform.tag == "Ground")
             {
-                if (select != null && CheckGrab() && movObj == null && checkCD <= 0)
+                if (playerManager.select != null && CheckGrab() && playerManager.movObj == null && playerManager.checkCD <= 0)
                 {
-                    if (buildCD <= 0)
+                    if (playerManager.buildCD <= 0)
                     {
-                        movObj = Instantiate(Resources.Load(select, typeof(GameObject)), hit.point, Quaternion.identity) as GameObject;
-                        movObj.tag = "Real";
-                        buildCD = 3f;
+                        playerManager.movObj = Instantiate(Resources.Load(playerManager.select, typeof(GameObject)), hit.point, Quaternion.identity) as GameObject;
+                        playerManager.movObj.tag = "Real";
+                        playerManager.buildCD = 2f;
                     }
-                    checkCD = 0.2f;
+                    playerManager.checkCD = 0.4f;
                 }
-                else if (movObj != null)
+                else if (playerManager.movObj != null)
                 {
-                    movObj.transform.position = hit.point;
+                    playerManager.movObj.transform.position = hit.point;
                 }  
             }
-            else if (movObj != null && hit.transform.tag == movObj.tag)
+            else if (playerManager.movObj != null && hit.transform.tag == playerManager.movObj.tag)
             {
-                if (CheckGrab() && checkCD <= 0)
+                if (CheckGrab() && playerManager.checkCD <= 0)
                 {
-                    checkCD = 0.2f;
-                    movObj = null;
+                    playerManager.checkCD = 0.4f;
+                    playerManager.movObj = null;
+                }
+                else
+                {
+                    playerManager.movObj.transform.position = new Vector3(hit.point.x, 0, hit.point.z); ;
                 }
             }
 
@@ -98,25 +91,25 @@ public class Controller : MonoBehaviour
             // Delete: trackpad     rotate: trigger
             else if (hit.transform.tag == "Real")
             {
-                if (CheckDelete() && deletCD <= 0)
+                if (CheckDelete() && playerManager.deletCD <= 0)
                 {
                     Destroy(hit.transform.gameObject);
-                    deletCD = 1f;
+                    playerManager.deletCD = 1f;
                 }
 
-                if (CheckGrab() && rotateCD <= 0 && checkCD <= 0 && movObj == null)
+                if (CheckGrab() && playerManager.rotateCD <= 0 && playerManager.checkCD <= 0 && playerManager.movObj == null)
                 {
                     hit.transform.Rotate(0, 90, 0);
-                    rotateCD = 0.2f;
-                    checkCD = 0.2f;
+                    playerManager.rotateCD = 0.4f;
+                    playerManager.checkCD = 0.4f;
                 }
             }
 
-            checkCD -= Time.deltaTime;
-            selectCD -= Time.deltaTime;
-            buildCD -= Time.deltaTime;
-            deletCD -= Time.deltaTime;
-            rotateCD -= Time.deltaTime;
+            playerManager.checkCD -= Time.deltaTime;
+            playerManager.selectCD -= Time.deltaTime;
+            playerManager.buildCD -= Time.deltaTime;
+            playerManager.deletCD -= Time.deltaTime;
+            playerManager.rotateCD -= Time.deltaTime;
         }
     }
 }
